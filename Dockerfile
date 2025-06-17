@@ -31,7 +31,7 @@ RUN mkdir -p /home/nodejs/.config/google-calendar-mcp && \
     chown -R nodejs:nodejs /home/nodejs/.config && \
     chown -R nodejs:nodejs /app
 
-RUN pip install git+https://github.com/sparfenyuk/mcp-proxy.git
+RUN pip install git+https://github.com/sparfenyuk/mcp-proxy.git --break-system-packages
 
 # Switch to non-root user
 USER nodejs
