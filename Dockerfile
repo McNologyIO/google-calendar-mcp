@@ -1,7 +1,6 @@
-# Google Calendar MCP Server - Optimized Dockerfile
-# syntax=docker/dockerfile:1
-
 FROM node:22-alpine
+
+RUN apk add --no-cache python3 py3-pip git bash
 
 # Create app user for security
 RUN addgroup -g 1001 -S nodejs && \
@@ -32,11 +31,15 @@ RUN mkdir -p /home/nodejs/.config/google-calendar-mcp && \
     chown -R nodejs:nodejs /home/nodejs/.config && \
     chown -R nodejs:nodejs /app
 
+RUN pip install git+https://github.com/sparfenyuk/mcp-proxy.git
+
 # Switch to non-root user
 USER nodejs
 
-# Expose port for HTTP mode (optional)
-EXPOSE 3000
+# Create entrypoint script that serves on /sse
+RUN echo '#!/bin/bash\n\
+mcp-proxy --sse-port=8000 --sse-host=0.0.0.0 --pass-environment -- node build/index.js' \
+> /entrypoint.sh && chmod +x /entrypoint.sh
 
-# Default command - run directly to avoid npm output
-CMD ["node", "build/index.js"]
+EXPOSE 8000
+ENTRYPOINT ["/entrypoint.sh"]
