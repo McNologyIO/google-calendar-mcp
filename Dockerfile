@@ -37,7 +37,7 @@ RUN pip install git+https://github.com/sparfenyuk/mcp-proxy.git --break-system-p
 RUN printf '#!/bin/sh\nmcp-proxy --sse-port=8000 --sse-host=0.0.0.0 --pass-environment -- node build/index.js\n' > /entrypoint.sh && \
     chmod +x /entrypoint.sh && \
     chown nodejs:nodejs /entrypoint.sh
-
+    chown nodejs:nodejs /home/nodejs/.config/google-calendar-mcp/tokens.json
 # Switch to non-root user
 USER nodejs
 
