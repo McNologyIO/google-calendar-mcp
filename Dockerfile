@@ -33,13 +33,13 @@ RUN mkdir -p /home/nodejs/.config/google-calendar-mcp && \
 
 RUN pip install git+https://github.com/sparfenyuk/mcp-proxy.git --break-system-packages
 
-# Switch to non-root user
-USER nodejs
-
 # Create entrypoint script that serves on /sse
 RUN echo '#!/bin/bash\n\
 mcp-proxy --sse-port=8000 --sse-host=0.0.0.0 --pass-environment -- node build/index.js' \
 > /entrypoint.sh && chmod +x /entrypoint.sh
+
+# Switch to non-root user
+USER nodejs
 
 EXPOSE 8000
 ENTRYPOINT ["/entrypoint.sh"]
